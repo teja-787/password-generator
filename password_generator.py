@@ -84,6 +84,7 @@ def main():
     gen.add_argument("--no-upper", action="store_false", dest="upper", help="Exclude uppercase")
     gen.add_argument("--no-digits", action="store_false", dest="digits", help="Exclude digits")
     gen.add_argument("--no-symbols", action="store_false", dest="symbols", help="Exclude symbols")
+    gen.add_argument("--count", type=int, default=1, help="Number of passwords to generate")
 
     # Check command
     check = subparsers.add_parser("check", help="Check password strength")
@@ -92,15 +93,15 @@ def main():
     args = parser.parse_args()
 
     if args.command == "generate":
-        password = generate_password(
-            length=args.length,
-            use_upper=args.upper,
-            use_digits=args.digits,
-            use_symbols=args.symbols
-        )
-        strength, score, feedback = check_strength(password)
-        print(f"\n🔑 Generated Password: {password}")
-        print(f"💪 Strength: {strength} ({score}/6)")
+        for i in range(args.count):
+            password = generate_password(
+                length=args.length,
+                use_upper=args.upper,
+                use_digits=args.digits,
+                use_symbols=args.symbols
+            )
+            strength, score, feedback = check_strength(password)
+            print(f"\n🔑 Password {i+1}: {password}  |  {strength} ({score}/6)")
         if feedback:
             print("\nTips:")
             for tip in feedback:
